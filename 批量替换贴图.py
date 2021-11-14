@@ -4,7 +4,7 @@
 #作者: 我東
 #mail:wodong526@dingtalk.com
 #time:2021/11/3
-#版本：V1.3
+#版本：V1.4
 #******************************************
 
 import os
@@ -13,7 +13,7 @@ import shiboken2
 import maya.OpenMaya as om
 import maya.OpenMayaUI as omUI
 
-edition = 'V1.3'    #版本号
+edition = 'V1.4'    #版本号
 
 def get_maya_parentUi():
     ptr = omUI.MQtUtil.mainWindow()
@@ -174,6 +174,11 @@ class createUi(QtWidgets.QMainWindow, Ui_MainWindow):
         may_run.set_plug(sel_file, new_path)
 
 
+try:
+    wnd.close()
+    wnd.deleteLater()
+except:
+    pass
 
 wnd = createUi()
 wnd.show()
