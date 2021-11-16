@@ -1,10 +1,10 @@
 #coding:gbk
 
 #*******************************************
-#ä½œè€…: æˆ‘æ±
+#×÷Õß: ÎÒ–|
 #mail:wodong526@dingtalk.com
-#time:2021/11/3
-#ç‰ˆæœ¬ï¼šV1.4
+#time:2021/11/17
+#°æ±¾£ºV1.5
 #******************************************
 
 import os
@@ -13,7 +13,7 @@ import shiboken2
 import maya.OpenMaya as om
 import maya.OpenMayaUI as omUI
 
-edition = 'V1.4'    #ç‰ˆæœ¬å·
+edition = 'V1.5'    #°æ±¾ºÅ
 
 def get_maya_parentUi():
     ptr = omUI.MQtUtil.mainWindow()
@@ -61,12 +61,12 @@ class select_file(object):
             file_l.append(file_node)
             mit_nodes.next()
 
-        #é˜¿è¯ºå¾·aiImage
+        #°¢ÅµµÂaiImage
         ai_node_l = list()
         dg_mod = om.MDGModifier()
         aiImage_type = om.MTypeId(om.MFnDependencyNode(dg_mod.createNode('aiImage')).typeId().id())
 
-        mit_ard_node = om.MItDependencyNodes(om.MFn.kPluginDependNode)#è¿™é‡Œä½¿ç”¨MItDependencyGraphä¹Ÿå¯ä»¥ï¼ŒæŒ‡å®šå¥½kInvalidç±»å‹å°±å¯ä»¥
+        mit_ard_node = om.MItDependencyNodes(om.MFn.kPluginDependNode)#ÕâÀïÊ¹ÓÃMItDependencyGraphÒ²¿ÉÒÔ£¬Ö¸¶¨ºÃkInvalidÀàĞÍ¾Í¿ÉÒÔ
         while not mit_ard_node.isDone():
             aiFile = om.MFnDependencyNode(mit_ard_node.thisNode())
             if aiFile.typeId() == aiImage_type:
@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.resize(398, 213)
-        MainWindow.setWindowTitle(u"æ±ç‰Œè´´å›¾æ›¿æ¢å·¥å…·.{}".format(edition))
+        MainWindow.setWindowTitle(u"–|ÅÆÌùÍ¼Ìæ»»¹¤¾ß.{}".format(edition))
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         MainWindow.setAnimated(True)
         MainWindow.setDocumentMode(False)
@@ -116,6 +116,8 @@ class Ui_MainWindow(object):
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
@@ -124,7 +126,13 @@ class Ui_MainWindow(object):
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setPlaceholderText("")
         self.lineEdit.setObjectName("lineEdit")
-        self.verticalLayout.addWidget(self.lineEdit)
+        self.horizontalLayout.addWidget(self.lineEdit)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setMinimumSize(QtCore.QSize(40, 40))
+        self.pushButton_2.setIcon(QtGui.QIcon(':fileOpen.png'))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setEnabled(True)
         self.pushButton.setMinimumSize(QtCore.QSize(0, 0))
@@ -152,21 +160,26 @@ class createUi(QtWidgets.QMainWindow, Ui_MainWindow):
         super(createUi, self).__init__(parent)
         self.setupUi(self)
         self.pushButton.clicked.connect(self.change_tex)
-        self.label.setText(u'å…ˆå¤åˆ¶æ–°çš„è´´å›¾è·¯å¾„\nå†ç‚¹å‡»RUN')
-        self.lineEdit.setPlaceholderText(u'ç²˜è´´æ–°çš„è·¯å¾„åˆ°è¿™é‡Œ')
+        self.pushButton_2.setToolTip(u'Ñ¡ÔñĞÂÌùÍ¼ÎÄ¼şÂ·¾¶')
+        self.pushButton_2.clicked.connect(self.open_path)
+        self.label.setText(u'ÏÈ¸´ÖÆĞÂµÄÌùÍ¼Â·¾¶\nÔÙµã»÷RUN')
+        self.lineEdit.setPlaceholderText(u'Õ³ÌùĞÂµÄÂ·¾¶µ½ÕâÀï')
 
+    def open_path(self):
+        file_path = QtWidgets.QFileDialog.getExistingDirectory(self, u'ĞÂÂ·¾¶Ñ¡Ôñ´°¿Ú', '{}/images'.format(mc.workspace(q = 1, rd = 1)))
+        self.lineEdit.setText(file_path)
 
     def change_tex(self):
         new_path = r'{}'.format(self.lineEdit.text())
         if os.path.exists(new_path) == False:
-            om.MGlobal.displayError(u'åŠ è½½çš„è·¯å¾„æ— æ•ˆã€‚')
+            om.MGlobal.displayError(u'¼ÓÔØµÄÂ·¾¶ÎŞĞ§¡£')
             return False
 
         may_run = select_file()
         try:
             sel_mesh = may_run.get_mesh()
         except:
-            om.MGlobal.displayError(u'è¯·é€‰æ‹©æœ‰æ•ˆçš„dagNodeã€‚')
+            om.MGlobal.displayError(u'ÇëÑ¡ÔñÓĞĞ§µÄdagNode¡£')
             return False
 
         sel_shading = may_run.get_shadingNode(sel_mesh)
