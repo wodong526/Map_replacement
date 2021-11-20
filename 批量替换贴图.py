@@ -4,7 +4,7 @@
 #作者: 我東
 #mail:wodong526@dingtalk.com
 #time:2021/11/17
-#版本：V1.5
+#版本：V1.6
 #******************************************
 
 import os
@@ -13,7 +13,7 @@ import shiboken2
 import maya.OpenMaya as om
 import maya.OpenMayaUI as omUI
 
-edition = 'V1.5'    #版本号
+edition = 'V1.6'    #版本号
 
 def get_maya_parentUi():
     ptr = omUI.MQtUtil.mainWindow()
