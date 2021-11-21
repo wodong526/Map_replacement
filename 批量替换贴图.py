@@ -177,8 +177,8 @@ class createUi(QtWidgets.QMainWindow, Ui_MainWindow):
             return False
 
         may_run = select_file()
-        sel_mesh = may_run.get_mesh()
         try:
+            sel_mesh = may_run.get_mesh()
             sel_shading = may_run.get_shadingNode(sel_mesh)
         except:
             om.MGlobal.displayError(u'请选择有效的节点。')
