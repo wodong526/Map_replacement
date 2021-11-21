@@ -10,6 +10,7 @@
 import os
 from PySide2 import QtCore, QtGui, QtWidgets
 import shiboken2
+import maya.cmds as mc
 import maya.OpenMaya as om
 import maya.OpenMayaUI as omUI
 
